@@ -1,6 +1,10 @@
-require('dotenv').config();
-const axios = require('axios');
+// require('dotenv').config();
+// const axios = require('axios');
 
+import dotenv from 'dotenv';
+dotenv.config()
+
+import axios from 'axios';
 export const searchTopic = async (req, res) => {
   const serpApiKey = process.env.SERPAPI_KEY;
   const url = `https://serpapi.com/search?engine=google_trends_trending_now&geo=IN&api_key=${serpApiKey}`;

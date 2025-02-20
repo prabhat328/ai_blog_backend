@@ -1,6 +1,9 @@
-const axios = require('axios');
-const winston = require('winston');
-require('dotenv').config();  // Load environment variables
+// const axios = require('axios');
+// const winston = require('winston');
+import axios from 'axios';
+import winston from 'winston';
+import dotenv from 'dotenv';
+dotenv.config()
 
 // Setup Winston logger
 const logger = winston.createLogger({
@@ -22,8 +25,7 @@ if (!plagiarismApiUrl) {
     throw new Error('PLAGIARISM_API_URL is not defined in environment variables');
 }
 
-// Plagiarism check controller
-const checkPlagiarism = async (req, res) => {
+export const checkPlagiarism = async (req, res) => {
     const { textToCheck } = req.body;
 
     if (!textToCheck) {
@@ -57,6 +59,3 @@ const checkPlagiarism = async (req, res) => {
     }
 };
 
-module.exports = {
-    checkPlagiarism
-};
