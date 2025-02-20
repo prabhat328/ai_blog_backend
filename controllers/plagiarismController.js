@@ -18,7 +18,6 @@ const logger = winston.createLogger({
     ]
 });
 
-// Get the plagiarism API URL from environment variables
 const plagiarismApiUrl = process.env.WINSTON_KEY;
 
 if (!plagiarismApiUrl) {

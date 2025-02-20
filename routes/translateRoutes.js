@@ -4,7 +4,6 @@ import { authenticateToken } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
-// Auth routes
-router.get("/translate", authenticateToken, translate);
+router.post("/translate", authenticateToken, translate);
 
 export default router;
