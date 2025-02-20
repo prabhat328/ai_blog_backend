@@ -1,61 +1,55 @@
-// const axios = require('axios');
-// const winston = require('winston');
-import axios from 'axios';
-import winston from 'winston';
-import dotenv from 'dotenv';
-dotenv.config()
+import axios from "axios";
+import dotenv from "dotenv";
+dotenv.config();
 
-// Setup Winston logger
-const logger = winston.createLogger({
-    level: 'info',
-    format: winston.format.combine(
-        winston.format.timestamp(),
-        winston.format.json()
-    ),
-    transports: [
-        new winston.transports.Console(),
-        new winston.transports.File({ filename: 'plagiarism-check.log' })
-    ]
-});
-
-// Get the plagiarism API URL from environment variables
-const plagiarismApiUrl = process.env.WINSTON_KEY;
-
-if (!plagiarismApiUrl) {
-    throw new Error('PLAGIARISM_API_URL is not defined in environment variables');
-}
+// Get API details from environment variables
+const plagiarismApiUrl = "https://api.gowinston.ai";
+const gowinstonApiKey = process.env.WINSTON_KEY;
 
 export const checkPlagiarism = async (req, res) => {
-    const { textToCheck } = req.body;
+  if (!plagiarismApiUrl || !gowinstonApiKey) {
+    console.log("Key or URL not found");
+    return res.status(500).json({ status: "error", message: "Server Error" });
+  }
+  const { textToCheck } = req.body;
 
-    if (!textToCheck) {
-        logger.error('No text provided for plagiarism check');
-        return res.status(400).json({ message: 'Text to check is required' });
-    }
+  if (!textToCheck) {
+    return res
+      .status(400)
+      .json({ status: "error", message: "Text to check is required" });
+  }
 
-    try {
-        // Call the plagiarism API
-        const apiResponse = await axios.post(plagiarismApiUrl, {
-            text: textToCheck
-        });
+  try {
+    // Prepare request payload
+    const requestBody = {
+      text: textToCheck,
+    };
 
-        // Log success with Winston
-        logger.info('Plagiarism check performed successfully', {
-            text: textToCheck,
-            result: apiResponse.data
-        });
+    // Make the request to GoWinston AI Plagiarism API
+    const apiResponse = await axios.post(
+      `${plagiarismApiUrl}/v2/plagiarism`,
+      requestBody,
+      {
+        headers: {
+          Authorization: `Bearer ${gowinstonApiKey}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
-        // Return the API response
-        return res.status(200).json(apiResponse.data);
-    } catch (error) {
-        // Log error with Winston
-        logger.error('Error occurred during plagiarism check', {
-            message: error.message,
-            stack: error.stack
-        });
+    // Return the API response
+    return res.status(200).json({ status: "success", data: apiResponse.data });
+    // return res.status(200).json({ score: 100 - apiResponse.data.result.score });
+  } catch (error) {
+    console.error(
+      "Error checking plagiarism:",
+      error.response?.data || error.message
+    );
 
-        // Return error to client
-        return res.status(500).json({ message: 'Error performing plagiarism check' });
-    }
+    return res.status(500).json({
+      status: "error",
+      message: "Error performing plagiarism check",
+      error: error.response?.data || error.message,
+    });
+  }
 };
-

@@ -1,10 +1,10 @@
 // require('dotenv').config();
 // const axios = require('axios');
 
-import dotenv from 'dotenv';
-dotenv.config()
+import dotenv from "dotenv";
+dotenv.config();
 
-import axios from 'axios';
+import axios from "axios";
 export const searchTopic = async (req, res) => {
   const serpApiKey = process.env.SERPAPI_KEY;
   const url = `https://serpapi.com/search?engine=google_trends_trending_now&geo=IN&api_key=${serpApiKey}`;
@@ -15,18 +15,19 @@ export const searchTopic = async (req, res) => {
 
     const formattedSearches = trendingSearches.map((search) => ({
       name: search.query,
-      volume: search.search_volume
+      volume: search.search_volume,
     }));
 
-    res.json({
-      status: 'success',
-      data: formattedSearches
+    res.status(200).json({
+      status: "success",
+      data: formattedSearches,
     });
   } catch (error) {
-    console.error('Error fetching trending topics in India:', error);
-    res.status(500).json({ status: 'error', message: 'Failed to fetch trending topics' });
+    console.error("Error fetching trending topics in India:", error);
+    res
+      .status(500)
+      .json({ status: "error", message: "Failed to fetch trending topics" });
   }
 };
-
 
 export const saveTopic = (req, res) => {};
