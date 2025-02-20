@@ -3,8 +3,6 @@ import Credential from "../models/credential.model.js";
 import JWT from "jsonwebtoken";
 import dotenv from "dotenv";
 
-import welcomeEmail from "../emailTemplates/welcome.template.js";
-
 dotenv.config();
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
@@ -35,7 +33,6 @@ export const googleLogin = async (req, res) => {
         active: true,
       });
       await user.save();
-      await welcomeEmail(email);
     } else {
       if (user.type !== "google-auth") {
         return res
