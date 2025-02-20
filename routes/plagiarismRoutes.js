@@ -5,6 +5,6 @@ import { authenticateToken } from "../middleware/authMiddleware.js";
 const router = express.Router();
 
 // Auth routes
-router.get("/plagiarism", authenticateToken, checkPlagiarism);
+router.post("/plagiarism", authenticateToken, checkPlagiarism);
 
 export default router;
