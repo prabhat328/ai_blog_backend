@@ -81,7 +81,12 @@ export const getContent = async (req, res) => {
     const prompt = AIprompt(topic);
     const content = await generateContent(prompt);
 
-    return res.status(200).json(content); // Directly return parsed JSON
+    // ✅ Return Markdown inside a JSON object
+    return res.status(200).json({ content });
+
+    // Alternatively, if you want to return raw Markdown:
+    // res.setHeader("Content-Type", "text/markdown");
+    // return res.status(200).send(content);
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
@@ -93,11 +98,20 @@ export const getContent = async (req, res) => {
  */
 const Modifyprompt = (content) => {
   return `
-  Improve and refine the following content while maintaining clarity:
-  ${JSON.stringify(content, null, 2)}
+    Improve and refine the following content while maintaining clarity and readability.  
+    Ensure the output is **fully formatted in Markdown** with proper headings, subheadings, and structure.  
   
-  Ensure the output follows the original JSON format.
-  `;
+    ### **Original Content:**  
+    \`\`\`markdown
+    ${content}
+    \`\`\`
+  
+    ### **Instructions:**  
+    - Enhance **clarity, engagement, and flow**.  
+    - Ensure proper **Markdown formatting** with headings, lists, and paragraphs where needed.  
+    - **Do not** alter the core meaning of the content.  
+    - Return **only the refined Markdown content**, without extra text.  
+    `;
 };
 
 /**
@@ -113,7 +127,12 @@ export const modifyContent = async (req, res) => {
     const prompt = Modifyprompt(content);
     const updatedContent = await generateContent(prompt);
 
-    return res.status(200).json(updatedContent);
+    // ✅ Return as JSON with Markdown inside a field
+    return res.status(200).json({ content: updatedContent });
+
+    // Alternatively, if you want to return raw Markdown:
+    // res.setHeader("Content-Type", "text/markdown");
+    // return res.status(200).send(updatedContent);
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }

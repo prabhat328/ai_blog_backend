@@ -38,8 +38,7 @@ export const checkPlagiarism = async (req, res) => {
     );
 
     // Return the API response
-    return res.status(200).json({ status: "success", data: apiResponse.data });
-    // return res.status(200).json({ score: 100 - apiResponse.data.result.score });
+    return res.status(200).json({ score: apiResponse.data.result.score });
   } catch (error) {
     console.error(
       "Error checking plagiarism:",
