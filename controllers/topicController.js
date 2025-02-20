@@ -1,6 +1,3 @@
-// require('dotenv').config();
-// const axios = require('axios');
-
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -13,7 +10,7 @@ export const searchTopic = async (req, res) => {
     const response = await axios.get(url);
     const trendingSearches = response.data.trending_searches;
 
-    const formattedSearches = trendingSearches.map((search) => ({
+    const formattedSearches = trendingSearches.slice(0, 20).map((search) => ({
       name: search.query,
       volume: search.search_volume,
     }));
@@ -29,5 +26,3 @@ export const searchTopic = async (req, res) => {
       .json({ status: "error", message: "Failed to fetch trending topics" });
   }
 };
-
-export const saveTopic = (req, res) => {};

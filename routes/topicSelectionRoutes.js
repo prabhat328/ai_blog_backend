@@ -1,5 +1,5 @@
 import express from "express";
-import { searchTopic, saveTopic } from "../controllers/topicController.js";
+import { searchTopic } from "../controllers/topicController.js";
 import { authenticateToken } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
